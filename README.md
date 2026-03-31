@@ -60,6 +60,7 @@ shodancli explore --help
 - Individual public IPv4 addresses such as `1.1.1.1`
 - Public CIDR ranges such as `8.8.8.0/24`
 - Public dash ranges such as `8.8.8.8-8.8.8.15`
+- Public shorthand dash ranges such as `8.8.8.8-15`
 
 Private and other non-public IPv4 addresses and ranges are rejected during input validation and reported as warnings.
 
@@ -72,7 +73,7 @@ The output includes:
 Explore IPv4 ranges with inline inputs:
 
 ```bash
-shodancli explore --ranges "1.1.1.1, 8.8.8.0/24, 8.8.8.8-8.8.8.15"
+shodancli explore --ranges "1.1.1.1, 8.8.8.0/24, 8.8.8.8-8.8.8.15, 60.12.212.75-79"
 ```
 
 Explore IPv4 ranges from a line-separated input file:

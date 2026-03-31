@@ -113,6 +113,19 @@ def ensure_public_dash_range(
     return cidrs
 
 
+def parse_dash_range_end(value: str, start: ipaddress.IPv4Address) -> ipaddress.IPv4Address:
+    if IPV4_RE.fullmatch(value):
+        return parse_ipv4(value)
+    if value.isdigit():
+        last_octet = int(value)
+        if not 0 <= last_octet <= 255:
+            raise InputError(f"invalid range end '{value}'")
+        octets = str(start).split(".")
+        octets[-1] = str(last_octet)
+        return ipaddress.IPv4Address(".".join(octets))
+    raise InputError(f"invalid range end '{value}'")
+
+
 def build_target_spec(token: str) -> TargetSpec:
     sanitized, warnings = strip_outer_noise(token)
     if not sanitized:
@@ -166,7 +179,7 @@ def build_target_spec(token: str) -> TargetSpec:
         if len(parts) != 2 or not parts[0] or not parts[1]:
             raise InputError(f"invalid dash range '{sanitized}'")
         start = parse_ipv4(parts[0])
-        end = parse_ipv4(parts[1])
+        end = parse_dash_range_end(parts[1], start)
         if start == end:
             ip = str(start)
             ensure_public_ip(start, sanitized)
