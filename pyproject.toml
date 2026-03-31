@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "shodancli"
-version = "0.1.1"
+version = "0.1.2"
 description = "Extensible Shodan command-line client with exploration commands for IPs and ranges."
 readme = "README.md"
 requires-python = ">=3.10"
