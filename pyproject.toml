@@ -1,0 +1,49 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "shodancli"
+version = "0.1.0"
+description = "Extensible Shodan command-line client with exploration commands for IPs and ranges."
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+authors = [
+  { name = "ret2src" }
+]
+keywords = ["shodan", "cli", "security", "reconnaissance", "network"]
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Environment :: Console",
+  "Intended Audience :: Information Technology",
+  "Intended Audience :: System Administrators",
+  "License :: OSI Approved :: MIT License",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3 :: Only",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Topic :: Internet",
+  "Topic :: Security",
+  "Topic :: System :: Networking",
+]
+dependencies = [
+  "requests>=2.32.0",
+  "rich>=13.7.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/ret2src/shodancli"
+Repository = "https://github.com/ret2src/shodancli"
+Issues = "https://github.com/ret2src/shodancli/issues"
+
+[project.scripts]
+shodancli = "shodancli.__main__:main"
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
