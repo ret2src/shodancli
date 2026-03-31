@@ -94,6 +94,25 @@ def parse_ipv4(value: str) -> ipaddress.IPv4Address:
         raise InputError(str(exc)) from exc
 
 
+def ensure_public_ip(ip: ipaddress.IPv4Address, raw_value: str) -> None:
+    if not ip.is_global:
+        raise InputError(f"non-public IPv4 address '{raw_value}' is not allowed")
+
+
+def ensure_public_network(network: ipaddress.IPv4Network, raw_value: str) -> None:
+    if not network.is_global:
+        raise InputError(f"non-public IPv4 range '{raw_value}' is not allowed")
+
+
+def ensure_public_dash_range(
+    start: ipaddress.IPv4Address, end: ipaddress.IPv4Address, raw_value: str
+) -> list[str]:
+    cidrs = [str(net) for net in ipaddress.summarize_address_range(start, end)]
+    if any(not ipaddress.IPv4Network(cidr).is_global for cidr in cidrs):
+        raise InputError(f"non-public IPv4 range '{raw_value}' is not allowed")
+    return cidrs
+
+
 def build_target_spec(token: str) -> TargetSpec:
     sanitized, warnings = strip_outer_noise(token)
     if not sanitized:
@@ -101,6 +120,7 @@ def build_target_spec(token: str) -> TargetSpec:
 
     if IPV4_RE.fullmatch(sanitized):
         ip = str(parse_ipv4(sanitized))
+        ensure_public_ip(ipaddress.IPv4Address(ip), sanitized)
         if ip != sanitized:
             warnings.append(f"normalized IP '{sanitized}' -> '{ip}'")
         return TargetSpec(
@@ -117,6 +137,7 @@ def build_target_spec(token: str) -> TargetSpec:
             network = ipaddress.IPv4Network(sanitized, strict=False)
         except ValueError as exc:
             raise InputError(f"invalid CIDR range '{sanitized}': {exc}") from exc
+        ensure_public_network(network, sanitized)
         if network.num_addresses == 1:
             ip = str(network.network_address)
             warnings.append(f"normalized single-host CIDR '{sanitized}' -> '{ip}'")
@@ -148,6 +169,7 @@ def build_target_spec(token: str) -> TargetSpec:
         end = parse_ipv4(parts[1])
         if start == end:
             ip = str(start)
+            ensure_public_ip(start, sanitized)
             warnings.append(f"normalized single-host range '{sanitized}' -> '{ip}'")
             return TargetSpec(
                 kind="ip",
@@ -159,7 +181,7 @@ def build_target_spec(token: str) -> TargetSpec:
             )
         if int(start) > int(end):
             raise InputError(f"range start is greater than end in '{sanitized}'")
-        cidrs = [str(net) for net in ipaddress.summarize_address_range(start, end)]
+        cidrs = ensure_public_dash_range(start, end, sanitized)
         canonical = f"{start}-{end}"
         if canonical != sanitized:
             warnings.append(f"normalized range '{sanitized}' -> '{canonical}'")

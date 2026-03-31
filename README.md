@@ -57,9 +57,11 @@ shodancli explore --help
 
 `shodancli explore` currently supports:
 
-- Individual IPv4 addresses such as `192.0.2.10`
-- CIDR ranges such as `192.0.2.0/24`
-- Dash ranges such as `198.51.100.10-198.51.100.50`
+- Individual public IPv4 addresses such as `1.1.1.1`
+- Public CIDR ranges such as `8.8.8.0/24`
+- Public dash ranges such as `8.8.8.8-8.8.8.15`
+
+Private and other non-public IPv4 addresses and ranges are rejected during input validation and reported as warnings.
 
 The output includes:
 
@@ -70,7 +72,7 @@ The output includes:
 Explore IPv4 ranges with inline inputs:
 
 ```bash
-shodancli explore --ranges "192.0.2.10, 192.0.2.0/24, 198.51.100.10-198.51.100.50"
+shodancli explore --ranges "1.1.1.1, 8.8.8.0/24, 8.8.8.8-8.8.8.15"
 ```
 
 Explore IPv4 ranges from a line-separated input file:
