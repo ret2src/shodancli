@@ -1,7 +1,10 @@
 # shodancli
 
 `shodancli` is an extensible Python command-line client for the Shodan API.
-Currently, it only supports the `explore` command for discovering exposed systems across individual IPv4 addresses and ranges.
+
+Currently, it supports the `explore` command for discovering exposed systems across individual IPv4 addresses and ranges.
+
+![](./docs/images/demo.png)
 
 ## Installation
 
@@ -62,7 +65,7 @@ shodancli explore --help
 - Public dash ranges such as `8.8.8.8-8.8.8.15`
 - Public shorthand dash ranges such as `8.8.8.8-15`
 
-Private and other non-public IPv4 addresses and ranges are rejected during input validation and reported as warnings.
+Non-public IPv4 addresses and ranges are rejected during input validation and reported as warnings.
 
 The output includes:
 
